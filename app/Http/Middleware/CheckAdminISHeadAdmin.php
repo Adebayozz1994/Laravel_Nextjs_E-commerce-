@@ -4,9 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAdminISHeadAdmin
+class CheckAdminIsHeadAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,6 +16,10 @@ class CheckAdminISHeadAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if(Auth::guard('admin')->user()->role == env('ROLE')){
+            return $next($request);
+        }
+        return redirect('/admin/login');
+    
     }
 }
